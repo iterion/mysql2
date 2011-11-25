@@ -278,10 +278,6 @@ static VALUE rb_mysql_result_fetch_row(VALUE self, ID db_timezone, ID app_timezo
           if (seconds == 0) {
             val = Qnil;
           } else {
-            if (month < 1 || day < 1) {
-              rb_raise(cMysql2Error, "Invalid date: %s", row[i]);
-              val = Qnil;
-            } else {
               if (seconds < MYSQL2_MIN_TIME || seconds > MYSQL2_MAX_TIME) { // use DateTime instead
                 VALUE offset = INT2NUM(0);
                 if (db_timezone == intern_local) {
@@ -306,7 +302,6 @@ static VALUE rb_mysql_result_fetch_row(VALUE self, ID db_timezone, ID app_timezo
                   }
                 }
               }
-            }
           }
           break;
         }
@@ -317,12 +312,7 @@ static VALUE rb_mysql_result_fetch_row(VALUE self, ID db_timezone, ID app_timezo
           if (year+month+day == 0) {
             val = Qnil;
           } else {
-            if (month < 1 || day < 1) {
-              rb_raise(cMysql2Error, "Invalid date: %s", row[i]);
-              val = Qnil;
-            } else {
-              val = rb_funcall(cDate, intern_new, 3, INT2NUM(year), INT2NUM(month), INT2NUM(day));
-            }
+          	val = rb_funcall(cDate, intern_new, 3, INT2NUM(year), INT2NUM(month), INT2NUM(day));
           }
           break;
         }
